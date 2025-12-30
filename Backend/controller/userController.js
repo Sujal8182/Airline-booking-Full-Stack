@@ -30,8 +30,13 @@ exports.AddAirUser = async (req, res) => {
 
         return res.status(201).json({
             success: true,
-            message: "User created",
-            user
+            message: "Registraion Successfull!",
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+                  }
         })
 
     } catch (error) {
@@ -63,13 +68,35 @@ exports.Login = async (req,res)=>{
         return res.status(401).json({ message: "Invalid credentials" })
     }  
 
-    TokenGenerate(user._id, res)
+    TokenGenerate(Airuser._id, res)
 
     res.status(200).json({
         success: true,
         message: "Login successful",
-        user: Airuser
+        user: {
+        id: Airuser._id,
+        name: Airuser.name,
+        email: Airuser.email,
+        role: Airuser.role
+      }
     });
+}
+exports.getMe = async (req, res) => {
+  res.status(200).json({
+    user: req.user
+  })
+}
+
+exports.logout = async (req,res)=>{
+    res
+        .status(200)
+        .cookie("token","",{
+            httpOnly : true,
+            expireAt : new Date(0),
+            samesite : "lax",
+            secure : false
+        })
+        .json("Log out Successfully")
 }
 
 exports.singleUser = async (req, res) => {
@@ -111,9 +138,10 @@ exports.adminLogin = async (req, res) => {
     return res.status(400).json({ message: "Email and Password are required" });
   }
 
-  const user = await User.findOne({ email, isAdmin: true }).select("+password");
+  const user = await AirUser.findOne({ email, role: "ADMIN" }).select("+password");
 
   if (!user) {
+    
     return res.status(400).json({ message: "Admin not found" });
   }
 

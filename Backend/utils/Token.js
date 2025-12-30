@@ -17,6 +17,10 @@ exports.TokenGenerate = (id,res)=>{
         httpOnly : true
     })
 
-    res.cookie("token", token , options)
+    res.cookie("token", token , options ,
+        {   sameSite: "lax",   // IMPORTANT
+            secure: false
+        }
+    )
     return token
 }
