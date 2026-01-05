@@ -23,7 +23,7 @@ exports.AddAirUser = async (req, res) => {
         const user = await AirUser.create(
             { name,
               email,
-              password : hashPass 
+              password : hashPass ,
             })
 
         TokenGenerate(user._id, res)
@@ -138,18 +138,23 @@ exports.adminLogin = async (req, res) => {
     return res.status(400).json({ message: "Email and Password are required" });
   }
 
-  const user = await AirUser.findOne({ email, role: "ADMIN" }).select("+password");
+  const user = await AirUser.findOne({email}).select("+password");
 
   if (!user) {
     
     return res.status(400).json({ message: "Admin not found" });
   }
 
+  await AirUser.updateOne(
+    {email : user.email},
+    { $set : { role : "ADMIN"}}
+  )
+
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     return res.status(400).json({ message: "Email and Password not matched" });
   }
-  const token = generateToken(user._id, res);
+  const token = TokenGenerate(user._id, res);
   res.status(201).json({ success: true, token, user });
 };
 

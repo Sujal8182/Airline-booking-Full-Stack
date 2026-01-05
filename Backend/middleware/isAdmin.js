@@ -1,13 +1,15 @@
 exports.isAdmin = async (req, res, next) => {
-  try {
-    const user = req.user;
-    if (!user || !user.isAdmin) {
-      return res
-        .status(404)
-        .json({ message: "You are not admin || authroize" });
-    }
-    next();
-  } catch (error) {
-    return res.status(404).json({ message: "Admin checking error", error });
+  if(!req.user){
+     return res.status(401).json({
+      message: "Not authenticated"
+    });
   }
+
+  if(!req.user.role !== "ADMIN"){
+      return res.status(403).json({
+      message: "Access denied. Admin only."
+    });
+  }
+
+  next()
 };
