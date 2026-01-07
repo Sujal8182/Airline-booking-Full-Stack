@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../Redux/Reducers/userSlice'
 import { toast } from 'react-toastify'
 import './SignIn.css'
+import { useNavigate } from 'react-router-dom'
 
 const SignIn = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -18,9 +20,16 @@ const SignIn = () => {
   }
 
   useEffect(() => {
-    if (message) toast(message.message)
-  }, [message])
+    if (message) toast.success(message)
 
+    if(error) toast.error(error)  
+  }, [message,error])
+
+  const navHome = ()=>{
+    if(message){
+      navigate('/')
+    }
+  }
   return (
     <div className="auth-wrapper">
       <form className="auth-card" onSubmit={loginHandler}>
@@ -49,7 +58,7 @@ const SignIn = () => {
           />
         </div>
 
-        <button className="auth-btn" type="submit">
+        <button className="auth-btn" type="submit" onClick={navHome}>
           Sign In
         </button>
 

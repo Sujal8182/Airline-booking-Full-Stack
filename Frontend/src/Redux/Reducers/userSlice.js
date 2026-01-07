@@ -76,13 +76,13 @@ const userSlice = createSlice({
                 (state.loading = false),
                 (state.isAuth = true),
                 (state.user = action.payload.user),
-                (state.message = action.payload.message)
+                (state.message = action.payload.message),
                 (state.error = null)
             })
             .addCase(register.fulfilled, (state, action)=>{
                 (state.loading = false),
                 (state.user = action.payload.user),
-                (state.message = action.payload.message)
+                (state.message = action.payload.message),
                 (state.error = null)
             })
             .addCase(login.rejected, (state, action)=>{
@@ -90,13 +90,13 @@ const userSlice = createSlice({
                 (state.isAuth = false),
                 (state.user = null),
                 (state.error = action.payload),
-                state.message = action.payload.message
+                (state.message = action.payload.message)
             })
             .addCase(register.rejected, (state, action)=>{
                 (state.loading = false),
                 (state.user = null),
                 (state.error = action.payload),
-                state.message = action.payload.message  
+                (state.message = action.payload.message)  
             })
 
     }

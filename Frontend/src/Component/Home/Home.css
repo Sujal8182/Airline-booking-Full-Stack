@@ -10,6 +10,7 @@
 * {
   box-sizing: border-box;
   font-family: Inter, system-ui, sans-serif;
+  scrollbar-width: none;
 }
 
 .home {
@@ -54,12 +55,12 @@
   cursor: pointer;
 }
 
-/* HERO */
-.hero {
+/* hero-name */
+.hero-name {
   padding: 60px 15vw;
 }
 
-.hero h1 {
+.hero-name h1 {
   font-size: 2.6rem;
   max-width: 700px;
   margin-bottom: 40px;
@@ -67,105 +68,284 @@
 
 /* SEARCH WRAPPER */
 .search-wrapper {
-  background: transparent;
+  /* background: linear-gradient(180deg, #0b2540, #061a30); */
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* TRIP TYPE */
 .trip-type {
-  margin-bottom: 12px;
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 4px;
+  margin-bottom: 16px;
 }
 
 .trip-type button {
-  padding: 6px 14px;
-  border-radius: 16px;
-  border: 1px solid #334155;
   background: transparent;
-  color: var(--white);
-  font-size: 0.8rem;
-  margin-right: 8px;
+  border: none;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-size: 14px;
   cursor: pointer;
 }
 
 .trip-type .active {
-  background: var(--blue);
-  border-color: var(--blue);
+  background: white;
+  color: #000;
+  font-weight: 600;
 }
 
 /* SEARCH BAR */
 .search-bar {
   display: grid;
-  grid-template-columns: 1.2fr 40px 1.2fr 1fr 1.4fr auto;
-  background: var(--white);
-  border-radius: 14px;
-  padding: 14px;
-  gap: 10px;
-  align-items: center;
+  grid-template-columns: 1fr 60px 1fr 1fr 1fr auto;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  align-items: stretch;
 }
 
+/* INPUT BOX */
 .input-box {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  padding: 10px 14px;
+  border-right: 1px solid #ddd;
+  gap : 2px
+}
+
+.input-box:last-of-type {
+  border-right: none;
 }
 
 .input-box label {
-  font-size: 0.9rem;
+  font-size: 12px;
   font-weight: 600;
-  color: #475569;
+  color: #333;
   margin-bottom: 4px;
 }
 
 .input-box input {
   border: none;
-  font-size: 1rem;
-  font: black;
-  font-weight: 600;
-}
-.input-box input::placeholder{
-    font-weight: 600;
-    color: black;
-}
-
-.input-box input:focus {
   outline: none;
+  font-size: 14px;
+  color: #000;
 }
 
+.input-box input::placeholder {
+  color: #777;
+}
+
+/* SELECT OVERRIDE (react-select) */
+.input-box .css-13cymwt-control {
+  border: none;
+  min-height: auto;
+  box-shadow: none;
+}
+.input-box .flight-select {
+  line-height: 1.4;
+}
+
+/* SWAP */
 .swap {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #0062e3;
+  cursor: pointer;
+  border-right: 1px solid #ddd;
 }
 
 /* SEARCH BUTTON */
 .search-btn {
-  background: var(--blue);
+  background: #0062e3;
   color: white;
   border: none;
-  border-radius: 12px;
-  padding: 14px 22px;
-  font-weight: 700;
+  padding: 0 28px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-}
-
-.search-btn:hover {
-  background: #005ecb;
 }
 
 /* OPTIONS */
 .options {
-  margin-top: 14px;
   display: flex;
-  gap: 24px;
-  font-size: 0.85rem;
-  color: var(--muted);
+  gap: 32px;
+  margin-top: 12px;
+  color: white;
+  font-size: 14px;
+}
+
+.options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+
+/* REACT-SELECT ROOT */
+.flight-select {
+  font-size: 14px;
+}
+
+/* CONTROL (input container) */
+.flight__control {
+  border: none !important;
+  box-shadow: none !important;
+  min-height: auto !important;
+  padding: 0 !important;
+  cursor: text;
+}
+
+/* VALUE CONTAINER */
+.flight__value-container {
+  padding: 0 !important;
+}
+
+/* INPUT TEXT */
+.flight__input-container {
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #000;
+}
+
+/* PLACEHOLDER */
+.flight__placeholder {
+  color: #777;
+  margin: 0;
+}
+
+/* SINGLE VALUE */
+.flight__single-value {
+  margin: 0;
+  color: #000;
+}
+
+/* DROPDOWN INDICATOR (arrow) */
+.flight__indicator {
+  padding: 0 4px;
+  color: #555;
+}
+
+/* REMOVE SEPARATOR */
+.flight__indicator-separator {
+  display: none;
+}
+
+/* MENU (dropdown) */
+.flight__menu {
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 50;
+}
+
+/* OPTION */
+.flight__option {
+  font-size: 14px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+/* OPTION STATES */
+.flight__option--is-focused {
+  background: #f0f6ff;
+}
+
+.flight__option--is-selected {
+  background: #0062e3;
+  color: white;
+}
+.flight__menu-portal {
+  z-index: 9999;
+}
+
+.hidden {
+  display: none;
+}
+.passenger-box input {
+  cursor: pointer;
+}
+.passenger-popup {
+  position: absolute;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  margin-top: 10px;
+  width: 340px;
+  color: #000;
+  z-index: 100;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.passenger-popup h4 {
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.passenger-popup .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.controls button {
+  border: 1px solid #0062e3;
+  background: white;
+  color: #0062e3;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.cabin-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.cabin-select button {
+  background: #f0f6ff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.active-cabin {
+  background: #0062e3 !important;
+  color: white !important;
+}
+
+.done-btn {
+  width: 100%;
+  background: #0062e3;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 12px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-  .navbar,
-  .hero {
-    padding: 20px;
-  }
-
   .search-bar {
     grid-template-columns: 1fr;
   }
@@ -174,7 +354,14 @@
     display: none;
   }
 
+  .input-box {
+    border-right: none;
+    border-bottom: 1px solid #eee;
+  }
+
   .search-btn {
     width: 100%;
+    padding: 14px;
   }
 }
+

@@ -23,4 +23,11 @@ const AirportSchema = new mongoose.Schema({
     }
 }, {timestamps : true})
 
+AirportSchema.index({
+    name : "text",
+    city : "text",
+    country : "text",
+    code : "text"
+})
+
 module.exports = mongoose.model("Airport", AirportSchema)
