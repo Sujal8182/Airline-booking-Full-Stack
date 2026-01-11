@@ -26,7 +26,7 @@ exports.AddAirUser = async (req, res) => {
               password : hashPass ,
             })
 
-        TokenGenerate(user._id, res)
+        // TokenGenerate(user._id, res)
 
         return res.status(201).json({
             success: true,

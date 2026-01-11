@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Adminapi from '../component/axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { adminLogin } from '../Redux/Reducers/adminSlice'
@@ -14,25 +13,25 @@ const Login = () => {
 
     const {error, message} = useSelector((state)=> state.admin)
 
-    const handleLogin =async (e)=>{
-        e.preventdefault()
+    const handleLogin = (e)=>{
+        e.preventDefault()
 
         dispatch(adminLogin({email,password}))
     }
 
     useEffect(()=>{
-        if(message) toast.success(message)
+        if(message) return toast.success(message)
 
-        if(error) toast.error(error)    
+        if(error) return toast.error(error)    
     },[message, error])
 
   return (
     <div>
         <h2>Admin Login</h2>
         <form onSubmit={handleLogin}>
-            <input type="text" name="" id="" placeholder='admin email' onChange={(e)=> setEmail(e.target.value)} value={email} required />
+            <input type={email} name="" id="" placeholder='admin email' onChange={(e)=> setEmail(e.target.value)} value={email} required />
 
-            <input type="password" name="" id="" placeholder='admin pass' onChange={(e)=> setPassword(e.target.value)} value={password} required/>
+            <input type={password} name="" id="" placeholder='admin password' onChange={(e)=> setPassword(e.target.value)} value={password} required/>
 
             <button type='submit'>Submit</button>
         </form>
