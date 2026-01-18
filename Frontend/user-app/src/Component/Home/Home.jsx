@@ -6,7 +6,6 @@ import Select from "react-select";
 import Footer from "./Footer";
 import AsyncSelect from "react-select/async";
 import axios from "axios";
-import api from "../../Redux/axios";
 
 
 const Home = () => {
@@ -87,7 +86,7 @@ const Home = () => {
     };
 
     try {
-      const res = await api.post('/search', payload);
+      const res = await axios.post(`http://localhost:5050/airline/users/search`, payload);
 
       console.log("Flights found : ", res.data)
 

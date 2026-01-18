@@ -1,35 +1,90 @@
-const Airport = require("../model/Airport")
+const Airport = require("../model/Airport");
+const AirCraft = require("../model/Aircraft");
+const Flight = require("../model/Flight");
+const Booking = require("../model/Booking");
 
-exports.createAirport = async (req,res)=>{
-    const {name , city , country , code } = req.body
+exports.getDashboardstas = async (req, res) => {
+  const [airports, aircraft, flights, bookings] = await Promise.all([
+    Airport.countDocuments(),
+    AirCraft.countDocuments(),
+    Flight.countDocuments(),
+    Booking.countDocuments(),
+  ]);
 
-    if (!name || !city || !country || !code) {
-    return res.status(400).json({ message: "All fields are required" })
-    }
+  res.json({ airports, aircraft, flights, bookings });
+};
 
-    const airportExists = await Airport.findOne({ code })
-    if (airportExists) {
-    return res.status(400).json({ message: "Airport already exists" })
-    }
+exports.createAirport = async (req, res) => {
+  const { name, city, country, code } = req.body;
 
-    const airport = Airport.create({
-        name,
-        city,
-        country,
-        code
-    })
+  if (!name || !city || !country || !code) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
 
-    res.status(201).json({
-        message : "Airport Created Successfully",
-        data : airport 
-    })
+  const airportExists = await Airport.findOne({ code });
+  if (airportExists) {
+    return res.status(400).json({ message: "Airport already exists" });
+  }
+
+  const airport = Airport.create({
+    name,
+    city,
+    country,
+    code,
+  });
+
+  res.status(201).json({
+    message: "Airport Created Successfully",
+    data: airport,
+  });
+};
+
+exports.createAircraft = async (req, res) => {
+  const { model, manufacturer, seatLayout, totalSeats } = req.body;
+
+  if (
+  !model ||
+  !manufacturer ||
+  seatLayout?.economy === undefined ||
+  seatLayout?.economy === null ||
+  !totalSeats
+) {
+  return res.status(400).json({ message: "All fields required" });
 }
 
+  const aircraft = await AirCraft.create({
+    model,
+    manufacturer,
+    seatLayout,
+    totalSeats
+  });
+
+  res.status(201).json(aircraft);
+};
+
+exports.getAircraft = async (req, res) => {
+  const aircraft = await AirCraft.find().sort({ createdAt: -1 });
+  res.json(aircraft);
+};
+
+
+exports.toggleAircraft = async (req, res) => {
+  const aircraft = await AirCraft.findById(req.params.id);
+  if (!aircraft) {
+    return res.status(404).json({ message: "Aircraft not found" });
+  }
+
+  aircraft.isActive = !aircraft.isActive;
+  await aircraft.save();
+
+  res.json(aircraft);
+};
+
 exports.getAirports = async (req, res) => {
-  const airports = await Airport.find().sort({ city: 1 })
+  const airports = await Airport.find().sort({ city: 1 });
 
   res.status(200).json({
     count: airports.length,
-    airports
-  })
-}
+    airports,
+  });
+};

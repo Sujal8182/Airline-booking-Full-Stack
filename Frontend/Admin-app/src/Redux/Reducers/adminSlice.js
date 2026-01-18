@@ -25,11 +25,11 @@ export const adminLogin = createAsyncThunk(
     }
 )
 
+
 const adminSlice = createSlice({
     name : "admin",
     initialState : {
         loading : false,
-        isAuth : false,
         error : null,
         admin : null,
         message : null,
@@ -44,15 +44,13 @@ const adminSlice = createSlice({
         builder
             .addCase(adminLogin.pending, (state)=>{
                 state.loading = true,
-                state.error = null,
-                state.isAuth = false
+                state.error = null
             })
             .addCase(adminLogin.fulfilled, (state,action)=>{
                 state.loading = false,
                 state.admin = action.payload.admin
                 // state.token = action.payload.token
                 state.message = action.payload.message
-                state.isAuth = true
                 state.error = null
             })
             .addCase(adminLogin.rejected, (state, action)=>{
@@ -64,5 +62,7 @@ const adminSlice = createSlice({
     }
 })
 
+
+
 export const { adminLogout } = adminSlice.actions;
-export default adminSlice.reducer
+export default adminSlice.reducer 

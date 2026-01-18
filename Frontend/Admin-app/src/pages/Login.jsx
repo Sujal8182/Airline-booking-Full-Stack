@@ -29,9 +29,9 @@ const Login = () => {
     <div>
         <h2>Admin Login</h2>
         <form onSubmit={handleLogin}>
-            <input type={email} name="" id="" placeholder='admin email' onChange={(e)=> setEmail(e.target.value)} value={email} required />
+            <input type={email} placeholder='admin email' onChange={(e)=> setEmail(e.target.value)} value={email} required />
 
-            <input type={password} name="" id="" placeholder='admin password' onChange={(e)=> setPassword(e.target.value)} value={password} required/>
+            <input type={password}  placeholder='admin password' onChange={(e)=> setPassword(e.target.value)} value={password} required/>
 
             <button type='submit'>Submit</button>
         </form>

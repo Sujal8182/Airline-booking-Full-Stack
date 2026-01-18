@@ -1,5 +1,5 @@
 
-const AirUser = require("../model/userModel")
+const User = require("../model/userModel")
 const bcrypt = require("bcrypt")
 const { TokenGenerate } = require("../utils/Token")
 const OTP = require("../model/otpmodel")
@@ -14,13 +14,13 @@ exports.AddAirUser = async (req, res) => {
             return res.status(400).json({ message: "All fields required" })
         }
 
-        const extAirUser= await AirUser.findOne({email}).select("+password")
+        const extAirUser= await User.findOne({email}).select("+password")
         if (extAirUser) {
         return res.status(401).json({ message: "AirUser Already Exist !" })
         }
 
         const hashPass = await bcrypt.hash(password, 10)
-        const user = await AirUser.create(
+        const user = await User.create(
             { name,
               email,
               password : hashPass ,
@@ -45,7 +45,7 @@ exports.AddAirUser = async (req, res) => {
     }
 }
 exports.getall = async (req,res)=>{
-     const Airuser = await AirUser.find();
+     const Airuser = await User.find();
     res.status(200).json({ success: true, Airuser });
 
 }
@@ -57,7 +57,7 @@ exports.Login = async (req,res)=>{
         return res.status(400).json({ message: "All fields required" })
     }
 
-    const Airuser= await AirUser.findOne({email}).select("+password")
+    const Airuser= await User.findOne({email}).select("+password")
 
      if (!Airuser) {
         return res.status(404).json({ message: "User not found !" });
@@ -111,7 +111,7 @@ exports.singleUser = async (req, res) => {
 
 exports.UpdateAirUser= async (req,res)=>{
     const Id = req.params.id
-    const Airuser= await AirUser.findByIdAndUpdate(Id, {email},{
+    const Airuser= await User.findByIdAndUpdate(Id, {email},{
         new : true,
         runValidators : true  
     })
@@ -124,7 +124,7 @@ exports.UpdateAirUser= async (req,res)=>{
 
 exports.deleteAirUser= async (req, res) => {
     const id = req.params.id
-    const AirUser= await AirUser.findByIdAndDelete(id);
+    const AirUser= await User.findByIdAndDelete(id);
 
     if (!AirUser) {
         return res.status(404).json({ message: "AirUsernot found !" });
@@ -138,17 +138,12 @@ exports.adminLogin = async (req, res) => {
     return res.status(400).json({ message: "Email and Password are required" });
   }
 
-  const user = await AirUser.findOne({email}).select("+password");
+  const user = await User.findOne({email}).select("+password");
 
   if (!user) {
     
     return res.status(400).json({ message: "Admin not found" });
   }
-
-  await AirUser.updateOne(
-    {email : user.email},
-    { $set : { role : "ADMIN"}}
-  )
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
@@ -165,7 +160,7 @@ exports.forgotpassword = async (req,res)=>{
         return res.status(400).json({message : "all fields are required"})
     }
 
-    const user = await AirUser.findOne({email})
+    const user = await User.findOne({email})
 
     if(!user){
         return res.status(404).json({message : "User not found"})
@@ -208,7 +203,7 @@ exports.verifyOTPandUpdatePassword = async (req,res)=>{
         return res.status(401).json({ message: "OTP is expired" });
     }
 
-    const user = await AirUser.findOne({email})
+    const user = await User.findOne({email})
     if (!user) {
     return res.status(401).json({ message: "User not found" });
     }

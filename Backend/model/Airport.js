@@ -20,6 +20,10 @@ const AirportSchema = new mongoose.Schema({
         uppercase : true,
         minlength : 3,
         maxlength : 3
+    },
+    isActive : {
+        type : Boolean,
+        default : true
     }
 }, {timestamps : true})
 
