@@ -1,47 +1,51 @@
 const Flight = require("../model/Flight");
 const Airport = require("../model/Airport");
+const Aircraft = require("../model/Aircraft");
 
 exports.createFlight = async (req, res) => {
   const {
-    airline,
+    aircraft,
     flightNumber,
     from,
     to,
     departureTime,
     arrivalTime,
-    basePrice,
-    seatsAvailable,
+    price,
   } = req.body;
 
   if (
-    !airline ||
+    !aircraft ||
     !flightNumber ||
     !from ||
     !to ||
     !departureTime ||
     !arrivalTime ||
-    !basePrice ||
-    !seatsAvailable
+    !price
   ) {
     return res.status(400).json({ message: "All fields are required" });
   }
-
-  const fromAirport = await Airport.findById(from);
-  const toAirport = await Airport.findById(to);
-
-  if (!fromAirport || !toAirport) {
-    return res.status(400).json({ message: "Invalid airport reference" });
+  if (from === to) {
+    return res
+      .status(400)
+      .json({ message: "From and To airports cannot be same" });
+  }
+  const plane = await Aircraft.findById(aircraft);
+  if (!plane || !plane.isActive) {
+    return res.status(400).json({ message: "Invalid aircraft" });
   }
 
   const flight = await Flight.create({
-    airline,
+    aircraft,
     flightNumber,
     from,
     to,
     departureTime,
     arrivalTime,
-    basePrice,
-    seatsAvailable,
+    price,
+    seatsAvailable : {
+      economy : plane.seatLayout.economy,
+      business : plane.seatLayout.business
+    }
   });
 
   res.status(201).json({
@@ -51,7 +55,10 @@ exports.createFlight = async (req, res) => {
 };
 
 exports.getFlights = async (req, res) => {
-  const flights = await Flight.find({ status: "SCHEDULED" });
+  const flights = await Flight.find()
+    .populate("from", "code city")
+    .populate("to", "code city")
+    .populate("aircraft", "model");
 
   res.status(200).json({
     count: flights.length,
@@ -127,20 +134,20 @@ exports.searchFlights = async (req, res) => {
   res.status(200).json({
     // count: results.length,
     // flights: results,
-    message : "Search request received",
-    request : req.body
+    message: "Search request received",
+    request: req.body,
   });
 };
 
-exports.searchbar = async (req,res)=>{
+exports.searchbar = async (req, res) => {
   try {
-    const city = req.query.city?.trim()
+    const city = req.query.city?.trim();
 
-    if(!city){
-      return res.status(404).json({message : "Fill the field  "})
+    if (!city) {
+      return res.status(404).json({ message: "Fill the field  " });
     }
 
-    const regex = new RegExp(`^${city}`, "i")
+    const regex = new RegExp(`^${city}`, "i");
 
     const airports = await Airport.find({
       $or: [
@@ -155,7 +162,6 @@ exports.searchbar = async (req,res)=>{
 
     res.json(airports);
   } catch (error) {
-      res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
-
-}
+};

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const Aircraft = () => {
       const dispatch = useDispatch();
-  const { list, loading } = useSelector(s => s.Aircraft);
+  const { list, loading  } = useSelector(s => s.Aircraft);
 
     useEffect(()=>{
         dispatch(fetchAircrafts())

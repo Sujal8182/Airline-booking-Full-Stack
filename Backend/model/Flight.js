@@ -1,62 +1,67 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const Flightschema = new mongoose.Schema({
+const Flightschema = new mongoose.Schema(
+  {
     
-    airline: {
-      type: String,
-      required: true
-    },
-
     flightNumber: {
       type: String,
-      required: true
+      required: true,
     },
-
+    
     from: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Airport",
-      required: true
+      required: true,
     },
-
+    
     to: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Airport",
-      required: true
+      required: true,
     },
-
+    
+    aircraft: {
+      type: String,
+      required: true,
+    },
     departureTime: {
       type: Date,
-      required: true
+      required: true,
     },
 
     arrivalTime: {
       type: Date,
-      required: true
+      required: true,
     },
 
-    basePrice: {
-      type: Number,
-      required: true
+    price: {
+      economy: {
+        type: Number,
+        required: true,
+      },
+      business: {
+        type: Number,
+        default: 0,
+      },
     },
 
     seatsAvailable: {
       economy: {
         type: Number,
-        required: true
+        required: true,
       },
       business: {
         type: Number,
-        required: true
-      }
+        default: 0,
+      },
     },
 
-    status: {
-      type: String,
-      enum: ["SCHEDULED", "CANCELLED"],
-      default: "SCHEDULED"
-    }
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  { timestamps: true },
+);
 
-  
-},{timestamps: true})
-
-module.exports = mongoose.model("Flight", Flightschema)
+module.exports = mongoose.model("Flight", Flightschema);

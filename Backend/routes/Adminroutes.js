@@ -3,7 +3,7 @@ const { isAdmin } = require("../middleware/isAdmin");
 const { isAuth } = require("../middleware/isAuth");
 const { adminLogin, singleUser, getall, AddAirUser, Login } = require("../controller/userController");
 const { authorizeRoles } = require("../middleware/role");
-const { createAirport, getAirports, getDashboardstas, createAircraft, getAircraft, toggleAircraft } = require("../controller/adminController");
+const { createAirport, getAirports, getDashboardstas, createAircraft, getAircraft, toggleAircraft, getBooking, cancelBooking } = require("../controller/adminController");
 const { createFlight, getFlights } = require("../controller/flightController");
 
 const router = express.Router();
@@ -18,6 +18,8 @@ router.get('/getflights', getFlights)
 router.post('/aircraft/add', createAircraft)
 router.get('/aircraft', getAircraft)
 router.patch('/aircraft/:id', toggleAircraft)
+router.get('/bookings', getBooking)
+router.patch('/:id/cancel', cancelBooking)
 
 
 module.exports = router
