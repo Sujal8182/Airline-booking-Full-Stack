@@ -6,6 +6,7 @@ import Select from "react-select";
 import Footer from "./Footer";
 import AsyncSelect from "react-select/async";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 
 const Home = () => {
@@ -114,7 +115,10 @@ const Home = () => {
 
         <div className="nav-right">
           <button className="nav-link">Help</button>
-          <button className="nav-link">Log in</button>
+          <Link to="/login" >
+            <button className="nav-link">Log in</button>
+          </Link>
+          
         </div>
       </header>
 

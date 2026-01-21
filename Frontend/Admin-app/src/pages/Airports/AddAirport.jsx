@@ -28,6 +28,7 @@ const AddAirport = () => {
             } 
     },[error, message])
   return (
+    <div className="bg-white rounded-xl shadow-sm p-6">
     <form onSubmit={handleSubmit}>
       <input placeholder="Airport Name" onChange={e=>setForm({...form,name:e.target.value})}/>
       <input placeholder="Code" onChange={e=>setForm({...form,code:e.target.value})}/>
@@ -35,6 +36,7 @@ const AddAirport = () => {
       <input placeholder="Country" onChange={e=>setForm({...form,country:e.target.value})}/>
       <button>Add Airport</button>
     </form>
+    </div>
   )
 }
 

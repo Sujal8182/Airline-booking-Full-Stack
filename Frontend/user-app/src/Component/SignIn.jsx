@@ -4,6 +4,7 @@ import { login } from '../Redux/Reducers/userSlice'
 import { toast } from 'react-toastify'
 import './SignIn.css'
 import { useNavigate } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const SignIn = () => {
   const dispatch = useDispatch()
@@ -65,6 +66,7 @@ const SignIn = () => {
         <span className="auth-footer">
           Secure access · Global airline booking
         </span>
+        <Link to="/register" className="auth-footer underline">Don't have account..</Link>
       </form>
     </div>
   )

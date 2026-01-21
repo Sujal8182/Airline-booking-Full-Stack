@@ -120,6 +120,9 @@
   transform: translateY(0);
   box-shadow: 0 12px 20px rgba(37, 99, 235, 0.4);
 }
+.color {
+  font : var(--sky-blue)
+}
 
 /* ===== FOOTER ===== */
 .auth-footer {

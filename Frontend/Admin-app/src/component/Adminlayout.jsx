@@ -1,21 +1,15 @@
-import React from 'react'
-import Header from './Header'
-import Sidebar from './sidebar'
-import { Outlet } from "react-router-dom";
+import Sidebar from "./sidebar";
 
-
-const Adminlayout = () => {
+const Adminlayout = ({ children }) => {
   return (
-    <div className='admin-container'>
+    <div className="flex bg-[#F4F6F8] min-h-screen">
       <Sidebar />
-      <div className="admin-main">
-        <Header />
-        <div className="admin-content">
-          <Outlet />
-        </div>
-      </div>
-    </div>
-  )
-}
 
-export default Adminlayout
+      <main className="ml-64 w-full p-8">
+        {children}
+      </main>
+    </div>
+  );
+};
+
+export default Adminlayout;
