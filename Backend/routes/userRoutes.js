@@ -1,7 +1,7 @@
 const express = require("express")
 const { AddAirUser, UpdateAirUser, deleteAirUser, Login, getMe, logout, } = require("../controller/userController")
 const { isAuth } = require("../middleware/isAuth")
-const { searchFlights, searchbar } = require("../controller/flightController")
+const { searchFlights, searchbar, getAllFlight } = require("../controller/flightController")
 const passengerValidator = require("../middleware/passengerValidator")
 
 const Route = express.Router()
@@ -15,6 +15,7 @@ Route.put("/update/:id", UpdateAirUser)
 
 Route.get("/searchflights", searchFlights)
 Route.get("/search",searchbar)
-Route.post('/search', passengerValidator, searchFlights)
+Route.get('/searchflights', passengerValidator, searchFlights)
+Route.get('/getallflight', getAllFlight)
 
 module.exports = Route

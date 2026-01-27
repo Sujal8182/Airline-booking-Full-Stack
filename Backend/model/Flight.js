@@ -20,8 +20,9 @@ const Flightschema = new mongoose.Schema(
       required: true,
     },
     
-    aircraft: {
-      type: String,
+    aircraft: { 
+      type: mongoose.Schema.Types.ObjectId,
+      ref : "Aircraft",
       required: true,
     },
     departureTime: {

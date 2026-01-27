@@ -8,9 +8,8 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-
 const Home = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isRoundTrip, setIsRoundTrip] = useState(false);
   let [from, setFrom] = useState(null);
   let [to, setTo] = useState(null);
@@ -43,7 +42,7 @@ const Home = () => {
     if (inputvalue.length < 2) return [];
 
     const res = await fetch(
-      `http://localhost:5050/airline/users/search?city=${inputvalue}`
+      `http://localhost:5050/airline/users/search?city=${inputvalue}`,
     );
 
     const data = await res.json();
@@ -76,35 +75,37 @@ const Home = () => {
       toast("Total passengers limit is 9");
       return;
     }
-    const payload = {
-      from: from.value,
-      to: to.value,
-      departDate,
-      returnDate: isRoundTrip ? returnDate : null,
-      adults,
-      children,
-      infants,
-      cabin,
-    };
 
     try {
-      const res = await axios.post(`http://localhost:5050/airline/users/search`, payload);
+      const res = await axios.get(
+        `http://localhost:5050/airline/users/searchflights`,
+        {
+          params: {
+            from: from.value,
+            to: to.value,
+            departDate,
+            returnDate: isRoundTrip ? returnDate : null,
+            adults,
+            children,
+            infants,
+            cabin,
+          },
+        },
+      );
 
-      console.log("Flights found : ", res.data)
-
-  
+      console.log("Flights found : ", res.data);
     } catch (err) {
       console.error(err);
 
-    if (err.response) {
-      toast(err.response.data.message);
-    } else {
-      toast("Network error");
+      if (err.response) {
+        toast(err.response.data.message);
+      } else {
+        toast("Network error");
+      }
+      // console.log("Flight search data:");
     }
-    console.log("Flight search data:", payload);
+    // navigate("/results")
   };
-  // navigate("/results")
-}
 
   return (
     <div className="home">
@@ -117,10 +118,9 @@ const Home = () => {
 
         <div className="nav-right">
           <button className="nav-link">Help</button>
-          <Link to="/login" >
+          <Link to="/login">
             <button className="nav-link">Log in</button>
           </Link>
-          
         </div>
       </header>
 
@@ -308,7 +308,7 @@ const Home = () => {
                       >
                         {c}
                       </button>
-                    )
+                    ),
                   )}
                 </div>
                 <button
