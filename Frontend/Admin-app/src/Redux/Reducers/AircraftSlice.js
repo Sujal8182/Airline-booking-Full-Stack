@@ -25,7 +25,7 @@ export const createAircraft = createAsyncThunk(
       });
       return res.data;
     } catch (error) {
-      thunkAPI.rejectWithValue(error?.res?.data?.message);
+      thunkAPI.rejectWithValue(error?.response?.data?.message);
     }
   },
 );
@@ -65,7 +65,7 @@ const aircraftSlice = createSlice({
       .addCase(fetchAircrafts.rejected, (state, action) => {
         ((state.loading = false),
           (state.list = null),
-          (state.error = action.payload));
+          (state.error = action.payload.error));
       })
       .addCase(createAircraft.pending, (state) => {
         ((state.loading = false), (state.error = null));

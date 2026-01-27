@@ -71,7 +71,7 @@ const App = () => {
             </Adminlayout>
             } />
         </Routes>
-        <ToastContainer />
+        
       </BrowserRouter>
     </>
   );

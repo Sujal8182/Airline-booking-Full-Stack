@@ -33,7 +33,7 @@ const adminSlice = createSlice({
         error : null,
         admin : null,
         message : null,
-        // token : null
+        token : null
     },
     reducers : {
         adminLogout(state){
@@ -48,15 +48,15 @@ const adminSlice = createSlice({
             })
             .addCase(adminLogin.fulfilled, (state,action)=>{
                 state.loading = false,
-                state.admin = action.payload.admin
-                // state.token = action.payload.token
+                state.admin = action.payload
+                state.token = action.payload
                 state.message = action.payload.message
                 state.error = null
             })
             .addCase(adminLogin.rejected, (state, action)=>{
                 state.loading = false,
                 state.error = action.payload.error
-                state.message = action.payload.message
+                state.message = action.payload  
                 state.admin = null
             })
     }

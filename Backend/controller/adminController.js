@@ -2,6 +2,7 @@ const Airport = require("../model/Airport");
 const AirCraft = require("../model/Aircraft");
 const Flight = require("../model/Flight");
 const Booking = require("../model/Booking");
+const Aircraft = require("../model/Aircraft");
 
 exports.getDashboardstas = async (req, res) => {
   const [airports, aircraft, flights, bookings] = await Promise.all([
@@ -50,6 +51,11 @@ exports.createAircraft = async (req, res) => {
     !totalSeats
   ) {
     return res.status(400).json({ message: "All fields required" });
+  }
+
+  let ExtAircraft = await Aircraft.findOne({model})
+  if(ExtAircraft){
+    return res.status(402).json({messae : "Aircraft already exists"})
   }
 
   const aircraft = await AirCraft.create({

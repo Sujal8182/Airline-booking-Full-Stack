@@ -21,13 +21,16 @@ const Register = () => {
   }
   const AirRegister = ()=>{
     if(setEmail === "" && setName === "" && setPassword === "") return toast("All fields are required")
-        
+    
+    if(message === "Registraion Successfull!") {
+      navigate('/login')
+    }  
   }
 
   useEffect(() => {
-    if (message) toast(message)
+    if (message) return toast(message)
 
-      if (error) toast(error)
+      if (error) return toast(error)
   }, [message])
 
   return (

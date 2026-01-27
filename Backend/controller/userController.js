@@ -147,10 +147,10 @@ exports.adminLogin = async (req, res) => {
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(400).json({ message: "Email and Password not matched" });
+    return res.status(400).json({ error: "Email and Password not matched" });
   }
   const token = TokenGenerate(user._id, res);
-  res.status(201).json({ success: true, token, user });
+  res.status(201).json({ success: true, token, user, message: "Login Successfully." });
 };
 
 exports.forgotpassword = async (req,res)=>{

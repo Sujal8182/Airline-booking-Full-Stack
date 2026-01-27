@@ -28,7 +28,8 @@ const SignIn = () => {
 
   const navHome = ()=>{
     if(message){
-      navigate('/')
+      navigate
+      ('/')
     }
   }
   return (

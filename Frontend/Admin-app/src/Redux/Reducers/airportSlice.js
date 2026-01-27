@@ -12,7 +12,7 @@ export const fetchAirports = createAsyncThunk(
             return res.data
         } catch (error) {
             return thunkAPI.rejectWithValue(
-                error?.res?.data?.message
+                error?.response?.data?.message
             )
         }
     }
@@ -28,7 +28,7 @@ export const createAirport = createAsyncThunk(
             return res.data
         } catch (error) {
             return thunkAPI.rejectWithValue(
-                error?.res?.data?.message
+                error?.response?.data?.message
             )
         }
     }
@@ -53,7 +53,7 @@ const airportSlice = createSlice({
             .addCase(fetchAirports.pending, state => { 
                 state.loading = true ;
                 state.error = null
-                state.message
+                state.message = null
             })
             .addCase(fetchAirports.fulfilled, (state , action)=>{
                 state.loading = false;
@@ -61,9 +61,9 @@ const airportSlice = createSlice({
                 state.message = action.payload
             })
             .addCase(fetchAirports.rejected, (state, action)=>{
-                state.airports = push(action.payload)
                 state.message = action.payload
                 state.error = action.payload
+                state.loading = false
             })
             .addCase(createAirport.pending, state => {
                 state.loading = true;
@@ -77,7 +77,7 @@ const airportSlice = createSlice({
             })
             .addCase(createAirport.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload
                 state.message = action.payload
             });
     }

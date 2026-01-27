@@ -16,14 +16,21 @@ const Login = () => {
   const handleLogin = e => {
     e.preventDefault();
     dispatch(adminLogin({ email, password }));
+    console.log(message)
   };
 
   useEffect(() => {
-    if (message) {
-      toast.success(message);
-      navigate("/admin/dashboard");
-    }
     if (error) toast.error(error);
+    if (message) {
+      if ( message == "Login Successfully."){
+        toast.success(message)
+        navigate("/admin/dashboard");
+      }
+      else{
+        toast.error(message)
+      }
+    }
+
   }, [message, error, navigate]);
 
   return (

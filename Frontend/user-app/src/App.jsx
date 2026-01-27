@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Register from './Component/Register';
 import Home from './Component/Home/Home';
+import FlightResults from './Component/FlightResults';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <Route path='/' element={<Home />} />
       <Route path='/login' element={<SignIn/>} />
       <Route path='/register' element={<Register />} />
+      <Route path='/results' element={<FlightResults />}/>
     </Routes>
     <ToastContainer />
    </BrowserRouter>

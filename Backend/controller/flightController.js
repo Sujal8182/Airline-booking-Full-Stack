@@ -67,75 +67,81 @@ exports.getFlights = async (req, res) => {
 };
 
 exports.searchFlights = async (req, res) => {
-  // const { from, to, date, passenger = 1, cabinclass = "economy" } = req.query;
+  const { from, to, departDate, passenger = 1, cabinclass = "economy" } = req.query;
+  if(!from || !to || !departDate){
+    return res.status(403).json({message : "All fields are required"})
+  }
 
-  // if (!from || !to || !date) {
-  //   return res.status(400).json({ message: "Missing required search fields" });
-  // }
+  if (from === to) {
+    return res
+      .status(400)
+      .json({ message: "From and to airport cannot be same" });
+  }
 
-  // if (from === to) {
-  //   return res
-  //     .status(400)
-  //     .json({ message: "From and to airport cannot be same" });
-  // }
+  if (!["economy", "business"].includes(cabinclass)) {
+    return res.status(400).json({ message: "Invalid cabin class" });
+  }
 
-  // if (!["economy", "business"].includes(cabinclass)) {
-  //   return res.status(400).json({ message: "Invalid cabin class" });
-  // }
+  const passengercount = Number(passenger);
 
-  // const passengercount = Number(passenger);
+  if (passengercount < 1) {
+    return res.status(400).json({ message: "Passenger must be at least 1" });
+  }
 
-  // if (passengercount < 1) {
-  //   return res.status(400).json({ message: "Passenger must be at least 1" });
-  // }
+  const start = new Date(date);
+  start.getUTCHours(0, 0, 0, 0);
 
-  // const start = new Date(date);
-  // start.getUTCHours(0, 0, 0, 0);
+  const end = new Date(date);
+  end.getUTCHours(23, 59, 59, 999);
 
-  // const end = new Date(date);
-  // end.getUTCHours(23, 59, 59, 999);
+  const seatField =
+    cabinclass === "economy"
+      ? "seatsAvailable.economy"
+      : "seatsAvailable.business";
 
-  // const seatField =
-  //   cabinclass === "economy"
-  //     ? "seatsAvailable.economy"
-  //     : "seatsAvailable.business";
+  const flights = await Flight.find({
+    from,
+    to,
+    status: "SCHEDULED",
+    departureTime: { $gte: start, $lte: end },
+    isActive : true,
+    [seatField]: { $gte: passengercount },
+  })
+    .populate("from", "code city")
+    .populate("to", "code city")
+    .populate("aircraft", "model")
 
-  // const flights = await Flight.find({
-  //   from,
-  //   to,
-  //   status: "SCHEDULED",
-  //   departureTime: { $gte: start, $lte: end },
-  //   [seatField]: { $gte: passengercount },
-  // })
-  //   .populate("from", "code city")
-  //   .populate("to", "code city");
+  const results = flights.map()
+  
+  ((flight) => {
+    let price = flight.basePrice * passenger;
 
-  // const results = flights.map((flight) => {
-  //   let price = flight.basePrice * passenger;
+    if (cabinclass == "business") {
+      price = price * 1.8;
+    }
 
-  //   if (cabinclass == "business") {
-  //     price = price * 1.8;
-  //   }
-
-  //   return {
-  //     id: flight._id,
-  //     airline: flight.airline,
-  //     flightNumber: flight.flightNumber,
-  //     from: flight.from,
-  //     to: flight.to,
-  //     departureTime: flight.departureTime,
-  //     arrivalTime: flight.arrivalTime,
-  //     cabinclass,
-  //     availableSeats: flight.seatsAvailable[cabinclass],
-  //     totalPrice: Math.round(price),
-  //   };
-  // });
+    // return {
+    //   id: flight._id,
+    //   airline: flight.airline,
+    //   flightNumber: flight.flightNumber,  
+    //   from: flight.from,
+    //   to: flight.to,
+    //   departureTime: flight.departureTime,
+    //   arrivalTime: flight.arrivalTime,
+    //   cabinclass,
+    //   availableSeats: flight.seatsAvailable[cabinclass],
+    //   totalPrice: Math.round(price),
+    // };
+  });
 
   res.status(200).json({
-    // count: results.length,
-    // flights: results,
     message: "Search request received",
-    request: req.body,
+    count: results.length,
+    route: `${from} → ${to}`,
+    date: departDate,
+    passenger,
+    cabin,
+    flights
   });
 };
 

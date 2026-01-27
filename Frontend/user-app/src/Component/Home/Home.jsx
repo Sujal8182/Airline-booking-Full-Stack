@@ -2,14 +2,15 @@ import React from "react";
 import "./Home.css";
 import { useState } from "react";
 import AirlineLanding from "../AirlineLanding";
-import Select from "react-select";
 import Footer from "./Footer";
 import AsyncSelect from "react-select/async";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 const Home = () => {
+  const navigate = useNavigate()
   const [isRoundTrip, setIsRoundTrip] = useState(false);
   let [from, setFrom] = useState(null);
   let [to, setTo] = useState(null);
@@ -56,23 +57,23 @@ const Home = () => {
 
   const handleSearch = async () => {
     if (!from || !to || !departDate) {
-      alert("Please select From, To and Depart date");
+      toast("Please select From, To and Depart date");
       return;
     }
     const total = adults + children + infants;
 
     if (adults < 1) {
-      alert("At least 1 adult is required");
+      toast("At least 1 adult is required");
       return;
     }
 
     if (infants > adults) {
-      alert("Infants cannot exceed adults");
+      toast("Infants cannot exceed adults");
       return;
     }
 
     if (total > 9) {
-      alert("Total passengers limit is 9");
+      toast("Total passengers limit is 9");
       return;
     }
     const payload = {
@@ -96,12 +97,13 @@ const Home = () => {
       console.error(err);
 
     if (err.response) {
-      alert(err.response.data.message);
+      toast(err.response.data.message);
     } else {
-      alert("Network error");
+      toast("Network error");
     }
     console.log("Flight search data:", payload);
   };
+  // navigate("/results")
 }
 
   return (
