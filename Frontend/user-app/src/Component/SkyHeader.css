@@ -1,0 +1,85 @@
+:root {
+    --navy: #021b3a;
+    --navy-dark: #01162e;
+    --blue: #0071eb;
+    --white: #ffffff;
+    --muted: #cbd5e1;
+}
+
+.sky-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+  color: white;
+  padding: 14px 24px;
+  padding-inline: 10vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LEFT */
+.sky-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sky-logo {
+  font-size: 22px;
+}
+
+.sky-brand {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* CENTER */
+.sky-search-pill {
+  background: rgba(255,255,255,0.18);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* RIGHT */
+.sky-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sky-link {
+  color: white;
+  font-size: 14px;
+  text-decoration: none;
+  opacity: 0.9;
+}
+
+.sky-link:hover {
+  opacity: 1;
+}
+
+.sky-login-btn {
+  background: white;
+  color: #03254c;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sky-login-btn:hover {
+  background: #e6ecf5;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .sky-search-pill {
+    display: none;
+  }
+}

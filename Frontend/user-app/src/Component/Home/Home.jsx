@@ -7,6 +7,7 @@ import AsyncSelect from "react-select/async";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import SkyHeader from "../SkyHeader";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -77,23 +78,9 @@ const Home = () => {
     }
 
     try {
-      const res = await axios.get(
-        `http://localhost:5050/airline/users/searchflights`,
-        {
-          params: {
-            from: from.value,
-            to: to.value,
-            departDate,
-            returnDate: isRoundTrip ? returnDate : null,
-            adults,
-            children,
-            infants,
-            cabin,
-          },
-        },
+      navigate(
+        `/flights?from=${from.value}&to=${to.value}&departDate=${departDate}&adults=${adults}&children=${children}&infants=${infants}&cabin=${cabin}`,
       );
-
-      console.log("Flights found : ", res.data);
     } catch (err) {
       console.error(err);
 
@@ -102,7 +89,7 @@ const Home = () => {
       } else {
         toast("Network error");
       }
-      // console.log("Flight search data:");
+      console.log("Flight search data:");
     }
     // navigate("/results")
   };
@@ -110,7 +97,7 @@ const Home = () => {
   return (
     <div className="home">
       {/* NAVBAR */}
-      <header className="navbar">
+      {/* <header className="navbar">
         <div className="nav-left">
           <span className="logo">✈</span>
           <span className="brand">SkyRoute</span>
@@ -122,7 +109,9 @@ const Home = () => {
             <button className="nav-link">Log in</button>
           </Link>
         </div>
-      </header>
+      </header> */}
+      <SkyHeader />
+
 
       {/* HERO */}
       <section className="hero-name">

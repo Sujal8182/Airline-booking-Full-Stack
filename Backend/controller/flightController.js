@@ -97,12 +97,9 @@ exports.searchFlights = async (req, res) => {
     from: fromAirport._id,
     to: toAirport._id,
     isActive: true,
-    departureTime: {
-    $gte: start,
-    $lte: end,
-  },
   })
   .populate("from to aircraft");
+  
 
   res.json({
     count: flights.length,
@@ -112,7 +109,6 @@ exports.searchFlights = async (req, res) => {
   console.log({
   from: fromAirport._id,
   to: toAirport._id,
-  passengerCount,
 });
 
 };
@@ -147,4 +143,13 @@ exports.getAllFlight = async (req,res)=>{
     const flights = await Flight.find()
 
     res.status(200).json({flights})
+}
+exports.getFlightsbyId = async (req,res)=>{
+  const id = req.params.id
+
+  const user = await Flight.findById(id)
+  if(!user){
+    return res.status(403).json({message : "FLight not found"})
+  }
+  res.status(201).json(user)
 }

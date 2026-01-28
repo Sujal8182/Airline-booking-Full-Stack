@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Register from './Component/Register';
 import Home from './Component/Home/Home';
 import FlightResults from './Component/FlightResults';
+import Booking from './Component/Booking';
 
 const App = () => {
   return (
@@ -14,7 +15,8 @@ const App = () => {
       <Route path='/' element={<Home />} />
       <Route path='/login' element={<SignIn/>} />
       <Route path='/register' element={<Register />} />
-      <Route path='/results' element={<FlightResults />}/>
+      <Route path="/flights" element={<FlightResults />} />
+      <Route path="/booking/:id" element={<Booking />} />
     </Routes>
     <ToastContainer />
    </BrowserRouter>

@@ -1,31 +1,70 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
+import "./FlightResults.css";
+import SkyHeader from "./SkyHeader";
 
 const FlightResults = () => {
   const [params] = useSearchParams();
-  const [data, setData] = useState(null);
+  const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [nowdate, setNowdate] = useState(null);
+
+  const query = {
+    from: params.get("from"),
+    to: params.get("to"),
+    departDate: params.get("departDate"),
+    adults: params.get("adults"),
+    cabin: params.get("cabin"),
+  };
+  const handleDatechange = (date) => {
+    setNowdate((prev) => {
+      const params = new URLSearchParams(prev);
+      params.set("departDate", date);
+      return params;
+    });
+
+    console.log(query.departDate);
+  };
+  const getFromFixedDate = () => {
+    const baseDate = new Date(query.departDate); // Jan = 0
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const result = [];
+
+    for (let i = 0; i < 5; i++) {
+      const d = new Date(baseDate);
+      d.setDate(baseDate.getDate() + i);
+      result.push(`${d.getDate()} ${months[d.getMonth()]}`);
+    }
+
+    return result;
+  };
+  console.log(getFromFixedDate());
+  const date = getFromFixedDate();
 
   useEffect(() => {
     const fetchFlights = async () => {
       try {
-        const res = await axios.post(
-          "http://localhost:5050/airline/users/search",
-          {
-            from: params.get("from"),
-            to: params.get("to"),
-            departDate: params.get("date"),
-            adults: 1,
-            children: 0,
-            infants: 0,
-            cabin: "Economy"
-          }
+        const res = await axios.get(
+          "http://localhost:5050/airline/users/searchflights",
+          { params },
         );
-        setData(res.data);
+        setFlights(res.data.flights || []);
       } catch (err) {
-        toast(err.response?.data?.message || "Failed to fetch flights");
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -33,50 +72,105 @@ const FlightResults = () => {
 
     fetchFlights();
   }, []);
+  const today = new Date(query.departDate);
+  const now = today.getDate();
+  const month = today.toLocaleDateString("en-Us", { month: "short" });
+  const formattedDate = `${now} ${month}`;
 
-  if (loading) return <p className="p-6">Loading flights...</p>;
-
-  if (!data?.flights?.length) {
-    return <p className="p-6">No flights found.</p>;
-  }
+  if (loading) return <div className="loading">Searching flights…</div>;
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-4">
-      <h2 className="text-xl font-semibold">
-        Flights {data.search.from} → {data.search.to}
-      </h2>
+    <div className="results-wrapper ">
+      {/* TOP HEADER */}
+      <SkyHeader
+        summary={`${query.from} → ${query.to} · ${query.adults} adult · ${query.cabin}`}
+      />
 
-      {data.flights.map(f => (
-        <div
-          key={f._id}
-          className="bg-white shadow rounded p-4 flex justify-between items-center"
-        >
-          <div>
-            <div className="font-semibold">
-              {f.from.code} → {f.to.code}
-            </div>
-            <div className="text-sm text-gray-500">
-              {new Date(f.departureTime).toLocaleTimeString()} –{" "}
-              {new Date(f.arrivalTime).toLocaleTimeString()}
-            </div>
-            <div className="text-xs text-gray-400">
-              Aircraft: {f.aircraft.model}
-            </div>
+      {/* DATE STRIP */}
+      <div className="date-strip pil">
+        {date.map((d, i) => (
+          <div
+            key={i}
+            className={`date-item pointer ${d === formattedDate ? "active" : ""}`}
+            onClick={() => handleDatechange(d)}
+          >
+            <div>{d}</div>
+            <strong>₹{9000 + i * 700}</strong>
           </div>
+        ))}
+      </div>
 
-          <div className="text-right">
-            <div className="font-semibold text-lg">
-              ₹{f.price.economy}
-            </div>
-            <Link
-              to={`/flights/${f._id}`}
-              className="text-blue-600 text-sm"
-            >
-              Select →
-            </Link>
-          </div>
+      {/* MAIN LAYOUT */}
+      <div className="layout pil">
+        {/* FILTERS */}
+        <div className="filters">
+          <h4>Stops</h4>
+          <label>
+            <input type="checkbox" /> Direct
+          </label>
+          <label>
+            <input type="checkbox" /> 1 stop
+          </label>
+          <label>
+            <input type="checkbox" /> 2+ stops
+          </label>
+
+          <h4>Baggage</h4>
+          <label>
+            <input type="checkbox" /> Cabin bag
+          </label>
+          <label>
+            <input type="checkbox" /> Checked bag
+          </label>
         </div>
-      ))}
+
+        {/* RESULTS */}
+        <div className="results">
+          {flights.map((f) => (
+            <Link
+              to={`/booking/${f._id}?adults=${query.adults}&cabin=${query.cabin}&from=${query.from}&to=${query.to}&departDate=${query.departDate}`}
+            >
+              <div key={f._id} className="flight-card">
+                <div className="flight-left">
+                  <div className="airline">IndiGo</div>
+
+                  <div className="time-row">
+                    <div>
+                      <strong>
+                        {new Date(f.departureTime).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </strong>
+                      <div>{f.from.code}</div>
+                    </div>
+
+                    <div className="middle">
+                      <span>1 stop BOM</span>
+                    </div>
+
+                    <div>
+                      <strong>
+                        {new Date(f.arrivalTime).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </strong>
+                      <div>{f.to.code}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="price-box">
+                  <div className="deal">7 deals from</div>
+                  <div className="price">₹{f.price.economy}</div>
+                  <button className="select-btn">Select →</button>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
