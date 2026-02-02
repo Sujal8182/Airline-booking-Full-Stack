@@ -4,7 +4,10 @@ const bcrypt = require("bcrypt")
 const { TokenGenerate } = require("../utils/Token")
 const OTP = require("../model/otpmodel")
 const { sendOTP } = require("../utils/sendOTP")
-
+const razorpay = require("../db/razorpay")
+const crypto = require("crypto")
+const dotenv = require("dotenv")
+dotenv.config()
 
 exports.AddAirUser = async (req, res) => {
     try {
@@ -68,7 +71,7 @@ exports.Login = async (req,res)=>{
         return res.status(401).json({ message: "Invalid credentials" })
     }  
 
-    TokenGenerate(Airuser._id, res)
+    TokenGenerate(Airuser._id,Airuser.role, res)
 
     res.status(200).json({
         success: true,
@@ -149,8 +152,10 @@ exports.adminLogin = async (req, res) => {
   if (!isMatch) {
     return res.status(400).json({ error: "Email and Password not matched" });
   }
-  const token = TokenGenerate(user._id, res);
-  res.status(201).json({ success: true, token, user, message: "Login Successfully." });
+
+  TokenGenerate(user._id,user.role, res)
+
+  res.status(201).json({ success: true, user, message: "Login Successfully." });
 };
 
 exports.forgotpassword = async (req,res)=>{
@@ -220,4 +225,35 @@ exports.verifyOTPandUpdatePassword = async (req,res)=>{
 
     res.status(201).json({ message : "Password reset successfully"})
 
+}
+exports.createOrder = async (req,res) =>{
+    const { amount } = req.body
+
+    const order = await razorpay.orders.create({
+        amount : amount * 100,
+        currency : "INR",
+        receipt : `receipt_${Date.now()}`
+    })
+
+    res.json(order)
+}
+exports.verifyPayment = async (req,res)=>{
+    const {
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature
+    } = req.body
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id
+
+    const expectedSignature = crypto
+        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+        .update(body)
+        .digest("hex")
+
+    if(expectedSignature === razorpay_signature){
+        return res.json({success : true})
+    }else {
+        return res.status(400).json({ success : false})
+    }    
 }

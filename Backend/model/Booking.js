@@ -1,6 +1,22 @@
 // models/Booking.js
 const mongoose = require("mongoose");
 
+const passengerSchema = new mongoose.Schema({
+  name : {
+    type : String,
+    required : true
+  },
+  age : {
+    type : Number,
+    required : true,
+  },
+  seatClass : {
+    type : String,
+    enum : ["economy", "business"],
+    required : true  
+  }
+})
+
 const bookingSchema = new mongoose.Schema(
   {
     user: {
@@ -15,17 +31,10 @@ const bookingSchema = new mongoose.Schema(
       required: true
     },
 
-    passengers: [
-      {
-        name: String,
-        age: Number,
-        seatClass: {
-          type: String,
-          enum: ["economy", "business"],
-          default: "economy"
-        }
-      }
-    ],
+    passengers: {
+      type : [passengerSchema],
+      required :true
+    },
 
     totalPrice: {
       type: Number,
@@ -46,4 +55,4 @@ const bookingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Bookings", bookingSchema);
+module.exports = mongoose.model("Booking", bookingSchema);

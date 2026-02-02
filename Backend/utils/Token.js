@@ -2,11 +2,11 @@ const jws = require("jsonwebtoken")
 const dotenv = require("dotenv")
 dotenv.config()
 
-exports.TokenGenerate = (id,res)=>{
+exports.TokenGenerate = (id,role,res)=>{
     if (res.headersSent) {
         throw new Error("Headers already sent before setting cookie")
     }
-    const token = jws.sign({id}, process.env.JWS_CODE,{
+    const token = jws.sign({id, role}, process.env.JWS_CODE,{
         expiresIn : process.env.JWS_EXPIRE
     })
 
@@ -18,7 +18,7 @@ exports.TokenGenerate = (id,res)=>{
     })
 
     res.cookie("token", token , options ,
-        {   sameSite: "lax",   // IMPORTANT
+        {   sameSite: "lax",   
             secure: false
         }
     )

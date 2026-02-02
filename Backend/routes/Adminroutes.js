@@ -9,17 +9,17 @@ const { createFlight, getFlights } = require("../controller/flightController");
 const router = express.Router();
 
 
-router.post('/login', adminLogin)
-router.post('/addAirport', createAirport)
-router.get("/airport", getAirports)
-router.post('/addflight', createFlight)
-router.get('/dashboard', getDashboardstas)
-router.get('/getflights', getFlights)
-router.post('/aircraft/add', createAircraft)
-router.get('/aircraft', getAircraft)
-router.patch('/aircraft/:id', toggleAircraft)
-router.get('/bookings', getBooking)
-router.patch('/:id/cancel', cancelBooking)
+router.post('/login',adminLogin)
+router.post('/addAirport',isAuth, isAdmin, createAirport)
+router.get("/airport",isAuth, isAdmin, getAirports)
+router.post('/addflight',isAuth, isAdmin, createFlight)
+router.get('/dashboard', isAuth, isAdmin,getDashboardstas)
+router.get('/getflights',isAuth, isAdmin, getFlights)
+router.post('/aircraft/add',isAuth, isAdmin, createAircraft)
+router.get('/aircraft', isAuth, isAdmin,getAircraft)
+router.patch('/aircraft/:id', isAuth, isAdmin,toggleAircraft)
+router.get('/bookings', isAuth, isAdmin,getBooking)
+router.patch('/:id/cancel', isAuth, isAdmin,cancelBooking)
 
 
 module.exports = router

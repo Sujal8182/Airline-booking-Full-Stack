@@ -13,7 +13,7 @@ const SignIn = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const { error, message } = useSelector((state) => state.user)
+  const { error, message , isAuth} = useSelector((state) => state.user)
 
   const loginHandler = (e) => {
     e.preventDefault()
@@ -22,16 +22,14 @@ const SignIn = () => {
 
   useEffect(() => {
     if (message) toast.success(message)
-
     if(error) toast.error(error)  
+
+    if(isAuth){
+      navigate('/', {replace : true})
+    }
   }, [message,error])
 
-  const navHome = ()=>{
-    if(message){
-      navigate
-      ('/')
-    }
-  }
+  
   return (
     <div className="auth-wrapper">
       <form className="auth-card" onSubmit={loginHandler}>
@@ -60,7 +58,7 @@ const SignIn = () => {
           />
         </div>
 
-        <button className="auth-btn" type="submit" onClick={navHome}>
+        <button className="auth-btn" type="submit" >
           Sign In
         </button>
 

@@ -23,7 +23,7 @@ app.use(cookieParser())
 connectDB();
 
 app.use('/airline/users', Airline_User)
-// app.use('/airline/users', userBooking)
+app.use('/airline/users', userBooking)
 app.use('/airline/admin', Admin)
 
 app.listen(process.env.PORT, ()=>{

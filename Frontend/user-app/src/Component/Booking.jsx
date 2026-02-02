@@ -40,7 +40,8 @@ const Booking = () => {
     const fetchFlight = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5050/airline/users/flights/${id}`, {searchParams});
+          `http://localhost:5050/airline/users/flights/${id}`,
+        );
         setFlight(res.data);
       } catch (err) {
         toast(err);
@@ -50,7 +51,7 @@ const Booking = () => {
     };
 
     fetchFlight();
-    console.log(query)
+    console.log(query);
   }, [id]);
   const handleChange = (i, field, value) => {
     const copy = [...passengers];
@@ -70,21 +71,62 @@ const Booking = () => {
     const totalPrice = pricePerSeat * passengers.length;
 
     try {
-      await axios.post(
-        "http://localhost:5050/airline/users/book",
-        {
-          flightId: flight._id,
-          passengers: passengers.map((p) => ({
-            ...p,
-            seatClass: cabin.toLowerCase(),
-          })),
-          totalPrice,
-        },
-        { withCredentials: true },
+      const orderRes = await axios.post(
+        "http://localhost:5050/airline/users/create-order",
+        { amount: totalPrice },
       );
+      const order = orderRes.data;
 
-      toast.success("Booking successful");
-      navigate("/my-bookings");
+      const options = {
+        key: "rzp_test_SBLZxHIcp8GLI5",
+        amount: order.amount,
+        currency: "INR",
+        name: "SkyRoute",
+        description: "Flight Booking",
+        order_id: order.id,
+        handler: async function (response) {
+          const verifyRes = await axios.post(
+            "http://localhost:5050/airline/users/verify-payment",
+            response,
+          );
+
+          if (!verifyRes.data.success) {
+            toast.error("Payment verification failed");
+            return;
+          } else {
+            await axios.post(
+              "http://localhost:5050/airline/users/book",
+              {
+                flightId: flight._id,
+                passengers: passengers.map((p) => ({
+                  name: p.name,
+                  age: Number(p.age),
+                  seatClass: cabin.toLowerCase(),
+                })),
+                totalPrice: Number(totalPrice),
+                paymentId: response.razorpay_payment_id
+              },
+              {
+                withCredentials: true,
+              },
+            );
+
+            toast.success("Payment successful & booking confirmed");
+            // navigate("/my-bookings")
+          }
+        },
+        prefill: {
+          name: "Test user",
+          email: "test@example.com",
+          contact: "9999999999",
+        },
+        theme: {
+          color: "#03254c",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (err) {
       toast(err.response?.data?.message || "Booking failed");
     }
@@ -95,13 +137,11 @@ const Booking = () => {
 
   const seatPrice =
     cabin === "Business" ? flight.price.business : flight.price.economy;
-
+  console.log(window.Razorpay);
   return (
     <div className="booking-wrapper sky">
       {/* HEADER */}
-      <SkyHeader
-        summary={`${query.from} → ${query.to} · ${cabin}`}
-      />
+      <SkyHeader summary={`${query.from} → ${query.to} · ${cabin}`} />
 
       <div className="booking-layout">
         {/* LEFT */}

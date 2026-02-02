@@ -96,20 +96,6 @@ const Home = () => {
 
   return (
     <div className="home">
-      {/* NAVBAR */}
-      {/* <header className="navbar">
-        <div className="nav-left">
-          <span className="logo">✈</span>
-          <span className="brand">SkyRoute</span>
-        </div>
-
-        <div className="nav-right">
-          <button className="nav-link">Help</button>
-          <Link to="/login">
-            <button className="nav-link">Log in</button>
-          </Link>
-        </div>
-      </header> */}
       <SkyHeader />
 
 
