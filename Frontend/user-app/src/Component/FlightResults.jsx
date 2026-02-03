@@ -24,7 +24,6 @@ const FlightResults = () => {
       return params;
     });
 
-    console.log(query.departDate);
   };
   const getFromFixedDate = () => {
     const baseDate = new Date(query.departDate); // Jan = 0
@@ -52,7 +51,6 @@ const FlightResults = () => {
 
     return result;
   };
-  console.log(getFromFixedDate());
   const date = getFromFixedDate();
 
   useEffect(() => {

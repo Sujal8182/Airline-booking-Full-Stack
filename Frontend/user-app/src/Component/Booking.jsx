@@ -98,6 +98,9 @@ const Booking = () => {
               "http://localhost:5050/airline/users/book",
               {
                 flightId: flight._id,
+                from : query.from,
+                to : query.to,
+                depart : query.departDate,
                 passengers: passengers.map((p) => ({
                   name: p.name,
                   age: Number(p.age),

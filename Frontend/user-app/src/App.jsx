@@ -7,6 +7,7 @@ import Home from "./Component/Home/Home";
 import FlightResults from "./Component/FlightResults";
 import Booking from "./Component/Booking";
 import UserProtectedRoute from "./UserProtectedRoute";
+import MyBookings from "./Component/MyBookings";
 
 const App = () => {
   return (
@@ -14,12 +15,13 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<SignIn />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<Home />} />
 
           <Route element={<UserProtectedRoute />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/register" element={<Register />} />
             <Route path="/flights" element={<FlightResults />} />
             <Route path="/booking/:id" element={<Booking />} />
+            <Route path='/my-bookings' element={<MyBookings />}/>
           </Route>
         </Routes>
         <ToastContainer />

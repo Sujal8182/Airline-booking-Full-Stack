@@ -11,6 +11,7 @@ import Flights from "./pages/Flights";
 import Addflight from "./pages/Addflight";
 import Bookings from "./pages/Bookings";
 import Adminlayout from "./component/Adminlayout";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
               </Adminlayout>
             }
           />
+          <Route element={<ProtectedRoutes />}>
           <Route
             path="/admin/airports/add"
             element={
@@ -70,6 +72,8 @@ const App = () => {
               <Bookings />
             </Adminlayout>
             } />
+
+            </Route>
         </Routes>
         
       </BrowserRouter>

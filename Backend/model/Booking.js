@@ -47,6 +47,8 @@ const bookingSchema = new mongoose.Schema(
       default: "confirmed"
     },
 
+    
+
     bookedAt: {
       type: Date,
       default: Date.now

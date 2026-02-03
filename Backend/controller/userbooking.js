@@ -1,34 +1,7 @@
 const express = require("express");
-const Booking = require("../model/userBooking");
+const Booking = require("../model/Booking");
 const { TokenGenerate } = require("../utils/Token");
 const Flight = require("../model/Flight");
-
-exports.Addbooking = async (req, res) => {
-  const Id = req.params.id;
-
-  if (!Id) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  const { from, to, depart } = req.body;
-
-  if (!from || !to || !depart) {
-    return res.status(404).json({ message: "All fields are required" });
-  }
-
-  const Extbooking = await Booking.findOne({ depart });
-  if (Extbooking) {
-    return res.status(404).json({ message: "Booking already done" });
-  }
-  const user = await Booking.create({
-    from,
-    to,
-    depart,
-  });
-  const token = TokenGenerate(user._id, res);
-
-  return res.status(201).json({ message: "Booking successfull", user, token });
-};
 
 exports.createBooking = async (req, res) => {
   try {
@@ -84,7 +57,34 @@ exports.createBooking = async (req, res) => {
       booking,
     });
   } catch (error) {
-    console.error("BOOKING ERROR: ", error);
+    console.error("BOOKING ERROR: ", error.message);
+    console.error("MONGOOSE ERRORS:", error.errors);
     res.status(500).json({ message: "Booking failed.." });
+  }
+};
+exports.getMyBookings = async (req, res) => {
+  try {
+    if (!req.user_id) {
+      return res.status(400).json({ message: "Unauthorized" });
+    }
+
+    const bookings = await Booking.find({ user: req.user_id })
+      .populate({
+        path: "flight",
+        model: "Flight",
+        select: "from to departureTime price airline flightNumber",
+        populate : [
+          {path : "from" , select : "name code"},
+          {path : "to", select : "name code"}
+        ]
+      })
+      .sort({ createdAt: -1 });
+
+    console.log("POPULATED BOOKINGS:", JSON.stringify(bookings, null, 2));
+
+    res.status(201).json({ bookings });
+  } catch (error) {
+    console.error("MY BOOKING ERROR : ", error);
+    res.status(500).json({ message: "Failed to fetch bookings" });
   }
 };

@@ -23,8 +23,10 @@ const SkyHeader = ({ summary }) => {
    <header className="sky-header">
       {/* LEFT */}
       <div className="sky-left">
+        <Link to={'/'} >
         <span className="sky-logo">✈</span>
         <span className="sky-brand">SkyRoute</span>
+        </Link>
       </div>
 
       {/* CENTER */}
